@@ -100,7 +100,6 @@ class QLearningAgent(ReinforcementAgent):
       HINT: To pick randomly from a list, use random.choice(list)
     """
     # Pick Action
-    action = None
     if util.flipCoin(self.epsilon):
       return random.choice(self.getLegalActions(state))
     return self.computeActionFromQValues(state)
@@ -177,15 +176,18 @@ class ApproximateQAgent(PacmanQAgent):
       Should return Q(state,action) = w * featureVector
       where * is the dotProduct operator
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return self.weights * self.featExtractor.getFeatures(state, action)
 
   def update(self, state, action, nextState, reward):
     """
        Should update your weights based on transition
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    featuresDifference = util.Counter()
+    featuresExtracted = self.featExtractor.getFeatures(state, action)
+    difference = reward + self.discount*self.computeValueFromQValues(nextState) - self.getQValue(state, action)
+    for key in featuresExtracted.keys():
+      featuresDifference[key] = featuresExtracted[key]*self.alpha*difference
+    self.weights += featuresDifference
 
   def final(self, state):
     "Called at the end of each game."
