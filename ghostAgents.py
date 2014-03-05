@@ -12,6 +12,7 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and 
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# what are you doing?
 
 from game import Agent
 from game import Actions
