@@ -53,7 +53,6 @@ class QLearningAgent(ReinforcementAgent):
     """
     return self.qvalues[(state, action)]
 
-
   def computeValueFromQValues(self, state):
     """
       Returns max_action Q(state,action)
@@ -62,10 +61,12 @@ class QLearningAgent(ReinforcementAgent):
       terminal state, you should return a value of 0.0.
     """
     maxQvalue = - float('inf')
-    for action in self.getLegalActions(self):
+    for action in self.getLegalActions(state):
       qvalue = self.getQValue(state, action)
       if qvalue > maxQvalue:
         maxQvalue = qvalue
+    if maxQvalue == - float('inf'):
+      return 0.0
     return maxQvalue
 
   def computeActionFromQValues(self, state):
@@ -76,7 +77,7 @@ class QLearningAgent(ReinforcementAgent):
     """
     bestAction = []
     maxQvalue = - float('inf')
-    for action in self.getLegalActions(self):
+    for action in self.getLegalActions(state):
       qvalue = self.getQValue(state, action)
       if qvalue == maxQvalue:
         bestAction.append(action)
@@ -84,7 +85,7 @@ class QLearningAgent(ReinforcementAgent):
         maxQvalue = qvalue
         bestAction = [action]
     if not bestAction:
-      return 0.0
+      return None
     return random.choice(bestAction)
 
   def getAction(self, state):
@@ -102,11 +103,7 @@ class QLearningAgent(ReinforcementAgent):
     action = None
     if util.flipCoin(self.epsilon):
       return random.choice(self.getLegalActions(state))
-    else:
-      action = self.computeActionFromQValues(state)
-      if action == 0.0:
-        return None
-      return action
+    return self.computeActionFromQValues(state)
 
   def update(self, state, action, nextState, reward):
     """
@@ -117,7 +114,7 @@ class QLearningAgent(ReinforcementAgent):
       NOTE: You should never call this function,
       it will be called on your behalf
     """
-    update = (1 - self.alpha)*self.qvalues[(state, action)] + self.alpha*(reward + self.discount*computeValueFromQValues(nextState))
+    update = (1 - self.alpha)*self.qvalues[(state, action)] + self.alpha*(reward + self.discount*self.computeValueFromQValues(nextState))
     self.qvalues[(state, action)] = update
 
   def getPolicy(self, state):
