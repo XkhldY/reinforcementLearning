@@ -57,7 +57,7 @@ class ValueIterationAgent(ValueEstimationAgent):
           value = max(value, self.computeQValueFromValues(state, action));
         tempValues[state] = value
       self.values = tempValues
-      
+
 
   def getValue(self, state):
     """
@@ -73,7 +73,7 @@ class ValueIterationAgent(ValueEstimationAgent):
     """
     qValue = 0
     for (nextState, prob) in self.mdp.getTransitionStatesAndProbs(state, action):
-      qValue += prob*(self.mdp.getReward(state, action, nextState) + self.discount*self.values[nextState])
+      qValue += prob*(self.mdp.getReward(state, action, nextState) + self.discount*self.getValue(nextState))
     return qValue
 
   def computeActionFromValues(self, state):
