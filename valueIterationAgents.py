@@ -47,22 +47,17 @@ class ValueIterationAgent(ValueEstimationAgent):
 
     # Write value iteration code here
     for iteration in range(self.iterations):
-      # self.iterationNumber = iteration + 1
       tempValues = util.Counter()
       for state in self.mdp.getStates():
         if self.mdp.isTerminal(state):
-          print "savedValue for", state, 0
           tempValues[state] = 0
           continue
         value = - float('inf')
         for action in self.mdp.getPossibleActions(state):
           value = max(value, self.computeQValueFromValues(state, action));
-          # print self.iterationNumber, state, action, value
-        print "savedValue for", state, value
         tempValues[state] = value
       self.values = tempValues
-    return None
-
+      
 
   def getValue(self, state):
     """
@@ -77,12 +72,9 @@ class ValueIterationAgent(ValueEstimationAgent):
       value function stored in self.values.
     """
     qValue = 0
-    # print state
     for (nextState, prob) in self.mdp.getTransitionStatesAndProbs(state, action):
       qValue += prob*(self.mdp.getReward(state, action, nextState) + self.discount*self.values[nextState])
-      # print (self.iterationNumber-1, state), self.values[(self.iterationNumber-1, state)]
     return qValue
-    util.raiseNotDefined()
 
   def computeActionFromValues(self, state):
     """
@@ -95,15 +87,12 @@ class ValueIterationAgent(ValueEstimationAgent):
     """
     value = -float('inf')
     bestAction = None
-    # augmentedState = (self.iterationNumber, state)
     for action in self.mdp.getPossibleActions(state):
       newValue = self.computeQValueFromValues(state, action)
       if newValue > value:
         value = newValue
         bestAction = action
     return bestAction
-
-    util.raiseNotDefined()
 
   def getPolicy(self, state):
     return self.computeActionFromValues(state)
